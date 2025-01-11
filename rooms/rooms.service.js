@@ -12,12 +12,11 @@ const bookRooms = (roomCount, occupancyType) => {
         const roomsToBeBooked = [];
         while (roomCount > roomsToBeBooked.length && floorId <= 10) {
           const roomsOnFloor = vacantRooms.filter((r) => r.floorId === floorId);
-          // TODO: fix this
-          const requiredRoomsCount = roomCount - roomsToBeBooked.length;
+          const requiredRoomCount = roomCount - roomsToBeBooked.length;
           roomsToBeBooked.push(
             ...roomsOnFloor.slice(
               0,
-              Math.min(requiredRoomsCount, roomsOnFloor.length)
+              Math.min(requiredRoomCount, roomsOnFloor.length)
             )
           );
           floorId++;
