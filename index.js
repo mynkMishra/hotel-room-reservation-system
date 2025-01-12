@@ -14,7 +14,7 @@ const port = 3000; // TODO: move to.env
 
 router.put("/rooms", roomsController.createRoomBookings);
 router.get("/rooms", roomsController.getAllRooms);
-router.post("/rooms/reset", roomsController.reset);
+router.get("/rooms/reset", roomsController.reset);
 
 app.use("/", router);
 app.listen(port, () => {

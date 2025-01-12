@@ -1,13 +1,11 @@
 const base_url = "http://localhost:3000";
 
 window.addEventListener("load", async () => {
-  console.log("onload");
   const response = await fetch(`${base_url}/rooms`, {
     method: "GET",
   });
 
   const body = await response.json();
-  console.log(body);
   renderRooms(body.body);
 });
 
@@ -58,22 +56,54 @@ async function bookRooms() {
     });
 
     const body = await response.json();
-    alert("sucess");
+    if (!body.success) {
+      alert(body.message);
+    } else {
+      alert("success");
+    }
+
     console.log(body);
   } catch (err) {
     alert("error");
-    console.log(err);
+    console.error(err);
   }
 }
 
-function generateRandomOccupancy() {
-  // Randomize availability (just an example, implement your logic)
-  selectedRooms = [];
-  // Logic to randomly set rooms as occupied
+async function generateRandomOccupancy() {
+  const numRooms = document.getElementById("rooms").value;
+  if (numRooms < 1 || numRooms > 5) {
+    alert("Enter number of rooms between 1 to 5");
+    return;
+  }
+  try {
+    const data = {
+      roomCount: numRooms,
+      occupancyType: "random",
+    };
+    const response = await fetch(`${base_url}/rooms`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json();
+    if (!body.success) {
+      alert(body.message);
+    } else {
+      alert("success");
+    }
+  } catch (err) {
+    alert("error");
+    console.error(err);
+  }
 }
 
-function resetBooking() {
-  selectedRooms = [];
-  // Reset all rooms to available
-  updateSelectedRooms();
+async function resetBooking() {
+  const response = await fetch(`${base_url}/rooms/reset`, {
+    method: "GET",
+  });
+
+  await response.json();
 }

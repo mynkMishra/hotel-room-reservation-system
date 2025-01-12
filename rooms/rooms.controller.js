@@ -12,9 +12,23 @@ const createRoomBookings = async (req, res) => {
     res.status(400).send({ error: "occupancyType is required" });
   }
 
-  roomsService.bookRooms(roomCount, occupancyType).then((result) => {
-    res.status(200).send({ message: "Booked successfully", body: result });
-  });
+  roomsService
+    .bookRooms(roomCount, occupancyType)
+    .then((result) => {
+      res
+        .status(200)
+        .send({ success: true, message: "Booked successfully", body: result });
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err === "NOT_ENOUGH") {
+        res
+          .status(200)
+          .send({ success: false, message: "Not enough rooms available" });
+        return;
+      }
+      res.status(500).send({ body: err });
+    });
 };
 
 const getAllRooms = (_, res) => {
@@ -28,7 +42,16 @@ const getAllRooms = (_, res) => {
     });
 };
 
-const reset = (_, res) => {};
+const reset = (_, res) => {
+  roomsService
+    .resetRooms()
+    .then(() => {
+      res.status(200).send({ message: "Reset successfully" });
+    })
+    .catch((err) => {
+      res.status(500).send({ body: err });
+    });
+};
 
 module.exports = {
   createRoomBookings,
